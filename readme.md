@@ -1,4 +1,4 @@
-![Jikan](http://i.imgur.com/ctoJ3Jp.png)
+[![Jikan](http://i.imgur.com/ctoJ3Jp.png)](#jikan---unofficial-myanimelistnet-php-api)
 
 # Jikan - Unofficial MyAnimeList.net PHP API
 [![build](https://travis-ci.org/jikan-me/jikan.svg?branch=master)](https://travis-ci.org/jikan-me/jikan?branch=master) [![build](https://ci.appveyor.com/api/projects/status/github/jikan-me/jikan?branch=master&svg=true)](https://ci.appveyor.com/project/irfan-dahir/jikan) [![stable](https://img.shields.io/packagist/v/jikan-me/jikan.svg?style=flat)](https://packagist.org/packages/jikan-me/jikan) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/jikan-me/jikan.svg)](http://isitmaintained.com/project/jikan-me/jikan "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/jikan-me/jikan.svg)](http://isitmaintained.com/project/jikan-me/jikan "Percentage of issues still open") [![stable](https://img.shields.io/badge/PHP-^%207.1-blue.svg?style=flat)]() [![Discord Server](https://img.shields.io/discord/460491088004907029.svg?style=flat&logo=discord)](https://discord.gg/4tvCr36)
@@ -25,11 +25,11 @@ The word _Jikan_ literally translates to _Time_ in Japanese (**時間**). And th
 - PHP 7.1+
 
 ## Jikan REST API
-A REST service is available as well.
+A REST API service is available as well
 
-- **[REST DOCUMENTATION](https://jikan.docs.apiary.io)**
-- **[Apps/Projects using JikanREST](https://jikan.moe/showcase)**
-- **[Host your own instance of Jikan REST](https://github.com/jikan-me/jikan-rest)**
+- **[REST API DOCUMENTATION](https://jikan.docs.apiary.io)**
+- **[Apps/Projects using the REST API](https://jikan.moe/showcase)**
+- **[Host the REST API yourself](https://github.com/jikan-me/jikan-rest)**
 
 ### Wrappers
 - **[.NET]** [Jikan.net](https://github.com/Ervie/jikan.net) by Ervie
@@ -37,8 +37,13 @@ A REST service is available as well.
 - **[Ruby]** [Jikan.rb](https://github.com/Zerocchi/jikan.rb) by Zerocchi
 - **[JavaScript]** [JikanJS](https://github.com/zuritor/jikanjs) by Zuritor
 - **[Java]** [Jikan4java](https://github.com/Doomsdayrs/Jikan4java) by Doomsdayrs
+- **[PHP]** [jikan-php](https://github.com/janvernieuwe/jikan-jikanPHP) by Jan Vernieuwe
+- **[Node.js]** [jikan-node](https://github.com/xy137/jikan-node) by xy137
+- **[Dart]** [jikan-dart](https://github.com/charafau/jikan-dart) by Rafal Wachol
+- **[TypeScript]** [jikants](https://github.com/Julien-Broyard/jikants) by Julien Broyard
+- **[TypeScript]** [jikan-client](https://github.com/javi11/jikan-client) by Javier Blanco
 
-[Add your own wrapper here](https://github.com/jikan-me/jikan/edit/master/readme.md)
+[Add your wrapper here](https://github.com/jikan-me/jikan/edit/master/readme.md)
 
 
 ## Features
@@ -78,7 +83,10 @@ A REST service is available as well.
     - Character
     - Person
     - Pagination Support
-    - Advanced Search (Filters)
+    - Advanced Search
+        - Filters
+        - Order By
+        - Sorting (Ascending/Descending)
 - Seasonal Anime (Season + Year)
 - Season List/Archive
 - Anime Scheduling (for current season)
@@ -91,8 +99,8 @@ A REST service is available as well.
 - Genre
     - Anime
     - Manga
-- Producers (Anime Listing)
-- Magazines (Manga Listing)
+- Producers (Anime Listing by a Producer)
+- Magazines (Manga Listing by a Magazine)
 - User
     - Profile
     - Friends
@@ -122,24 +130,58 @@ PHPCS, PHPLint & PHPUnit
 
 `php vendor/bin/grumphp run`
 
+---
 
-## Changelog
+# Sugoi Backers
+Thank you to all our **sugoi** backers! 🙏 [[Become a sugoi backer](https://patreon.com/jikan)]
+- [Jared Allard (jaredallard)](https://github.com/jaredallard)
 
-### v2.6.1 stable - Dec 17, 18
-- **[Club]** Optimize User list schema
+# Backers
+Thank you to all our backers! 🙏 [[Become a backer](https://patreon.com/jikan)]
+- [PurplePinapples](https://github.com/purplepinapples/)
+- [Barkdoll (Jesse)](https://github.com/barkdoll/)
+- [Piotr Szymczak (Drutol)](https://github.com/Drutol)
+- [Jason Weatherly (jamesthebard)](https://twitter.com/jamesthebard)
+- [Cesar Irad Mendoza (aberuwu)](https://github.com/aberuwu)
 
-### v2.6.0 stable - Dec 16, 18
-- **[Club]** Add club parsing
 
-### v2.5.0 stable - Dec 13, 18
-- **[Anime|Manga]** Add **Reviews** parsing
-- **[Club]** Add **User List** parsing - 2.4.0
+# Sponsors
+Thank you to all our sponsors! You will recieve advertisement/promotive perks. [[Become a sponsor](https://patreon.com/jikan)]
+- [Hibiki Matsujo](https://github.com/assintates)
 
-### v2.3.0 Stable - Nov 14, 18
-- **[Anime|Manga]** Add **Recommendations** parsing
-- **[Anime|Manga]** Add **Recently Updated By Users** parsing - 2.2.0
-- **[Seasonal]** Added parsing for **later** anime - 2.1.4
-- **[User List]** Bug fix for some manga lists parsing - 2.1.3
+---
+
+## Release Changelog
+
+### v2.8.0 - Apr 30, 19
+- **[User List : Anime|Manga]**
+    - Throw `BadResponseException` instead of `ParserException` when the request fails [#217](/../../issues/217)
+    - Add list filtering & sorting [jikan-rest#49](https://github.com/jikan-me/jikan-rest/issues/49)
+    - Replace `StudioMeta`, `LicensorMeta` & `MagazineMeta` with `MalUrl` intead
+        - This will further provide properties like `type`, `url`
+- **[Search : Anime|Manga]**
+    - Add result ordering & sorting [jikan-rest#48](https://github.com/jikan-me/jikan-rest/issues/48)
+    
+
+### v2.7.0 - Apr 14, 19
+- **[Anime|Manga]** 
+    - `EpisodeListItem` `aired` property to return `DateTimeImmutable` instead of `DateRange`
+    - [Bug Fix] Stats Score refactoring; returns `AnimeStatsScore`/`MangaStatsScore` object instead of array now - [#216](/../../issues/216)
+    - Fix `AnimeListItem`/`MangaListItem` parsing date formats incorrectly
+- **[Helper]** fix `parseDateMDY` returning incorrect date
+- **[Jikan.php]**
+    - fix `PersonSearch`incorrect Request class hinting
+    - add `UserMangaList`
+- **[MalClient.php]**
+    - `getAnimeEpisodes` with no episodes return empty episodes array now instead of BadResponseException (404)
+    - `getPersonSearch` with no results returns empty array now instead of BadResponseException (404)
+    - `getCharacterSearch` with no results returns empty array now instead of BadResponseException (404)
+    - `getCharacter` returns BadResponseException (404) now if invalid ID is provided
+    - Fix guzzle dep injection being overriden in some cases
+- **[User]**
+    - Fix `UserProfileParser`'s `getUsername()` returning the URL instead of the username
+- Added default values to some models
+- Other minor code and bug fixes
 
 [Read More](https://github.com/jikan-me/jikan/blob/master/changelog.md)
 

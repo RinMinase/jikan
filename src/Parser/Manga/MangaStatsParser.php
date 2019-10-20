@@ -2,7 +2,10 @@
 
 namespace Jikan\Parser\Manga;
 
+use Jikan\Helper\JString;
+use Jikan\Helper\Parser;
 use Jikan\Model\Manga\MangaStats;
+use Jikan\Model\Manga\MangaStatsScore;
 use Jikan\Parser\ParserInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -34,12 +37,16 @@ class MangaStatsParser implements ParserInterface
      */
     public function getReading(): int
     {
-        return $this->sanitize(
-            $this->crawler
-                ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Reading:\')]')
-                ->parents()
-                ->getNode(0)->textContent
-        );
+        try {
+            return $this->sanitize(
+                $this->crawler
+                    ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Reading:\')]')
+                    ->parents()
+                    ->getNode(0)->textContent
+            );
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -58,12 +65,16 @@ class MangaStatsParser implements ParserInterface
      */
     public function getCompleted(): int
     {
-        return $this->sanitize(
-            $this->crawler
-                ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Completed:\')]')
-                ->parents()
-                ->getNode(0)->textContent
-        );
+        try {
+            return $this->sanitize(
+                $this->crawler
+                    ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Completed:\')]')
+                    ->parents()
+                    ->getNode(0)->textContent
+            );
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -72,12 +83,16 @@ class MangaStatsParser implements ParserInterface
      */
     public function getOnHold(): int
     {
-        return $this->sanitize(
-            $this->crawler
-                ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'On-Hold:\')]')
-                ->parents()
-                ->getNode(0)->textContent
-        );
+        try {
+            return $this->sanitize(
+                $this->crawler
+                    ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'On-Hold:\')]')
+                    ->parents()
+                    ->getNode(0)->textContent
+            );
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -86,12 +101,16 @@ class MangaStatsParser implements ParserInterface
      */
     public function getDropped(): int
     {
-        return $this->sanitize(
-            $this->crawler
-                ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Dropped:\')]')
-                ->parents()
-                ->getNode(0)->textContent
-        );
+        try {
+            return $this->sanitize(
+                $this->crawler
+                    ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Dropped:\')]')
+                    ->parents()
+                    ->getNode(0)->textContent
+            );
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -100,12 +119,16 @@ class MangaStatsParser implements ParserInterface
      */
     public function getPlanToRead(): int
     {
-        return $this->sanitize(
-            $this->crawler
-                ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Plan to Read:\')]')
-                ->parents()
-                ->getNode(0)->textContent
-        );
+        try {
+            return $this->sanitize(
+                $this->crawler
+                    ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Plan to Read:\')]')
+                    ->parents()
+                    ->getNode(0)->textContent
+            );
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -114,12 +137,16 @@ class MangaStatsParser implements ParserInterface
      */
     public function getTotal(): int
     {
-        return $this->sanitize(
-            $this->crawler
-                ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Total:\')]')
-                ->parents()
-                ->getNode(0)->textContent
-        );
+        try {
+            return $this->sanitize(
+                $this->crawler
+                    ->filterXPath('//div[@class="spaceit_pad"]/span[contains(text(), \'Total:\')]')
+                    ->parents()
+                    ->getNode(0)->textContent
+            );
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     /**
@@ -128,30 +155,35 @@ class MangaStatsParser implements ParserInterface
      */
     public function getScores(): array
     {
-        $table = $this->crawler->filterXPath('//h2[text()="Score Stats"]/following-sibling::table');
-        $voteCounts = $table->filterXPath('//small[contains(text(), \'votes\')]');
-
         $scores = [];
-        $score = 10;
+        $table = $this->crawler->filterXPath('//h2[text()="Score Stats"]/following-sibling::table[1]/tr');
 
-        $voteCounts->each(
-            function (Crawler $crawler) use (&$scores, &$score) {
-                $scores[$score] = [
-                    'votes'      => $this->sanitize($crawler->text()),
-                    'percentage' => (double)preg_replace(
-                        '/[^0-9,.]/',
-                        '',
-                        substr(
-                            $completeText = $crawler->parents()->getNode(0)->textContent,
-                            0,
-                            strpos($completeText, '%')
-                        )
-                    ),
-                ];
+        $table->each(function (Crawler $crawler) use (&$scores) {
+            $score = (int) $crawler->filterXPath('//td[1]')->text();
 
-                $score--;
+            $votes = (int) $this->sanitize(
+                $crawler->filterXPath('//td[2]/div/span/small')
+                    ->text()
+            );
+
+            $percentage = Parser::removeChildNodes(
+                $crawler->filterXPath('//td[2]/div/span')
+            )->text();
+            $percentage = JString::UTF8NbspTrim(
+                str_replace('%', '', $percentage)
+            );
+            $percentage = (float) JString::cleanse($percentage);
+
+            $scores[$score] = MangaStatsScore::setProperties($votes, $percentage);
+        });
+
+        for ($i=1; $i<=10; $i++) {
+            if (!array_key_exists($i, $scores)) {
+                $scores[$i] = MangaStatsScore::setProperties(0, 0);
             }
-        );
+        }
+
+        ksort($scores);
 
         return $scores;
     }

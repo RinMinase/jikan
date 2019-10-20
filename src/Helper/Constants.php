@@ -82,6 +82,34 @@ class Constants
     public const SEARCH_ANIME_RATING_RX = 6;
     public const SEARCH_ANIME_RATING_HENTAI = 6; // alias
 
+    /*
+     * Search Ordering Explained
+     * https://github.com/jikan-me/jikan/issues/220#issuecomment-487446859
+     */
+
+    public const SEARCH_SORT_ASCENDING = 0;
+    public const SEARCH_SORT_DESCENDING = 1;
+
+    public const SEARCH_ANIME_ORDER_BY_TITLE = 0;
+    public const SEARCH_ANIME_ORDER_BY_START_DATE = 2;
+    public const SEARCH_ANIME_ORDER_BY_SCORE = 3;
+    public const SEARCH_ANIME_ORDER_BY_EPISODES = 4;
+    public const SEARCH_ANIME_ORDER_BY_END_DATE = 5;
+    public const SEARCH_ANIME_ORDER_BY_TYPE = 6;
+    public const SEARCH_ANIME_ORDER_BY_MEMBERS = 7; // Default: Music -> ONA -> Special -> Movie -> OVA -> TV -> Unknown
+    public const SEARCH_ANIME_ORDER_BY_RATED = 8; // Default: Rx -> R+ -> R -> PG13 -> PG -> G
+    public const SEARCH_ANIME_ORDER_BY_ID = 9;
+
+    public const SEARCH_MANGA_ORDER_BY_TITLE = 0;
+    public const SEARCH_MANGA_ORDER_BY_START_DATE = 2;
+    public const SEARCH_MANGA_ORDER_BY_SCORE = 3;
+    public const SEARCH_MANGA_ORDER_BY_VOLUMES = 4;
+    public const SEARCH_MANGA_ORDER_BY_END_DATE = 5;
+    public const SEARCH_MANGA_ORDER_BY_CHAPTERS = 6;
+    public const SEARCH_MANGA_ORDER_BY_MEMBERS = 7;
+    public const SEARCH_MANGA_ORDER_BY_TYPE = 8; // Default: Manhua, Manhwa, Doujinshi, One-shot, Novel, Manga
+    public const SEARCH_MANGA_ORDER_BY_ID = 9;
+
     public const GENRE_ANIME_ACTION = 1;
     public const GENRE_ANIME_ADVENTURE = 2;
     public const GENRE_ANIME_CARS = 3;
@@ -166,11 +194,16 @@ class Constants
     public const GENRE_MANGA_MILITARY = 38;
     public const GENRE_MANGA_POLICE = 39;
     public const GENRE_MANGA_PSYCHOLOGICAL = 40;
-    public const GENRE_MANGA_THRILLER = 41;
-    public const GENRE_MANGA_SEINEN = 42;
-    public const GENRE_MANGA_JOSEI = 43;
+    public const GENRE_MANGA_SEINEN = 41;
+    public const GENRE_MANGA_JOSEI = 42;
     public const GENRE_MANGA_DOUJINSHI = 43;
     public const GENRE_MANGA_GENDER_BENDER = 44;
+    public const GENRE_MANGA_THRILLER = 45;
+
+    /*
+     * User List Ordering Explained
+     * https://github.com/jikan-me/jikan/issues/221#issuecomment-487711031
+     */
 
     public const USER_ANIME_LIST_ALL = 7;
     public const USER_ANIME_LIST_WATCHING = 1;
@@ -180,6 +213,26 @@ class Constants
     public const USER_ANIME_LIST_PTW = 6;
     public const USER_ANIME_LIST_PLANTOWATCH = 6;
 
+    public const USER_ANIME_LIST_ORDER_BY_TITLE = 1;
+    public const USER_ANIME_LIST_ORDER_BY_FINISHED_DATE = 2;
+    public const USER_ANIME_LIST_ORDER_BY_STARTED_DATE = 3;
+    public const USER_ANIME_LIST_ORDER_BY_SCORE = 4;
+    public const USER_ANIME_LIST_ORDER_BY_LAST_UPDATED = 5;
+    public const USER_ANIME_LIST_ORDER_BY_TYPE = 6;
+    public const USER_ANIME_LIST_ORDER_BY_RATED = 8;
+    public const USER_ANIME_LIST_ORDER_BY_REWATCH_VALUE = 9;
+    public const USER_ANIME_LIST_ORDER_BY_PRIORITY = 11;
+    public const USER_ANIME_LIST_ORDER_BY_PROGRESS = 12;
+    public const USER_ANIME_LIST_ORDER_BY_EPISODES = 12; // alias to above
+    public const USER_ANIME_LIST_ORDER_BY_STORAGE = 13;
+    public const USER_ANIME_LIST_ORDER_BY_AIR_START = 14;
+    public const USER_ANIME_LIST_ORDER_BY_AIR_END = 15;
+    public const USER_ANIME_LIST_ORDER_BY_STATUS = 16;
+
+    public const USER_ANIME_LIST_CURRENTLY_AIRING = 1;
+    public const USER_ANIME_LIST_FINISHED_AIRING = 2;
+    public const USER_ANIME_LIST_NOT_YET_AIRED = 3;
+
     public const USER_MANGA_LIST_ALL = 7;
     public const USER_MANGA_LIST_READING = 1;
     public const USER_MANGA_LIST_COMPLETED = 2;
@@ -187,4 +240,24 @@ class Constants
     public const USER_MANGA_LIST_DROPPED = 4;
     public const USER_MANGA_LIST_PTR = 6;
     public const USER_MANGA_LIST_PLANTOREAD = 6;
+
+    public const USER_MANGA_LIST_ORDER_BY_TITLE = 1;
+    public const USER_MANGA_LIST_ORDER_BY_FINISHED_DATE = 2;
+    public const USER_MANGA_LIST_ORDER_BY_STARTED_DATE = 3;
+    public const USER_MANGA_LIST_ORDER_BY_SCORE = 4;
+    public const USER_MANGA_LIST_ORDER_BY_LAST_UPDATED = 5;
+    public const USER_MANGA_LIST_ORDER_BY_PRIORITY = 8;
+    public const USER_MANGA_LIST_ORDER_BY_CHAPTERS = 9;
+    public const USER_MANGA_LIST_ORDER_BY_VOLUMES = 10;
+    public const USER_MANGA_LIST_ORDER_BY_TYPE = 11;
+    public const USER_MANGA_LIST_ORDER_BY_PUBLISH_START = 12;
+    public const USER_MANGA_LIST_ORDER_BY_PUBLISH_END = 13;
+    public const USER_MANGA_LIST_ORDER_BY_STATUS = 14;
+
+    public const USER_MANGA_LIST_CURRENTLY_PUBLISHING = 1;
+    public const USER_MANGA_LIST_FINISHED_PUBLISHING = 2;
+    public const USER_MANGA_LIST_NOT_YET_PUBLISHED = 3;
+
+    public const USER_LIST_SORT_DESCENDING = 1;
+    public const USER_LIST_SORT_ASCENDING = -1;
 }

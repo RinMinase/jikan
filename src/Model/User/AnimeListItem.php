@@ -3,8 +3,10 @@
 namespace Jikan\Model\User;
 
 use Jikan\Helper\Constants;
+use Jikan\Helper\JString;
 use Jikan\Helper\Parser;
 use Jikan\Model\Common\LicensorMeta;
+use Jikan\Model\Common\MalUrl;
 use Jikan\Model\Common\StudioMeta;
 
 /**
@@ -161,11 +163,8 @@ class AnimeListItem
     private $licensors = [];
 
     /**
-     * @param \stdClass $parser
-     *
+     * @param \stdClass $item
      * @return AnimeListItem
-     * @throws \Exception
-     * @throws \InvalidArgumentException
      */
     public static function factory(\stdClass $item): self
     {
@@ -188,10 +187,10 @@ class AnimeListItem
         $instance->hasVideo = $item->has_video;
         $instance->type = $item->anime_media_type_string;
         $instance->rating = $item->anime_mpaa_rating_string;
-        $instance->startDate = Parser::parseDateDMY($item->anime_start_date_string);
-        $instance->endDate = Parser::parseDateDMY($item->anime_end_date_string);
-        $instance->watchStartDate = Parser::parseDateDMY($item->start_date_string);
-        $instance->watchEndDate = Parser::parseDateDMY($item->finish_date_string);
+        $instance->startDate = Parser::parseDateMDY($item->anime_start_date_string);
+        $instance->endDate = Parser::parseDateMDY($item->anime_end_date_string);
+        $instance->watchStartDate = Parser::parseDateMDY($item->start_date_string);
+        $instance->watchEndDate = Parser::parseDateMDY($item->finish_date_string);
         $instance->days = $item->days_string;
         $instance->storage = empty($item->storage_string) ? null : $item->storage_string;
         $instance->priority = $item->priority_string;
@@ -202,15 +201,25 @@ class AnimeListItem
             $instance->seasonYear = $item->anime_season->year;
         }
 
-        if (!is_null($item->anime_studios)) {
+        if ($item->anime_studios !== null) {
             foreach ($item->anime_studios as $studio) {
-                $instance->studios[] = new StudioMeta($studio->id, $studio->name);
+                $studioNameCanonical = JString::strToCanonical($studio->name);
+
+                $instance->studios[] = new MalUrl(
+                    $studio->name,
+                    Constants::BASE_URL . "/anime/producer/{$studio->id}/{$studioNameCanonical}"
+                );
             }
         }
 
-        if (!is_null($item->anime_licensors)) {
+        if ($item->anime_licensors !== null) {
             foreach ($item->anime_licensors as $licensor) {
-                $instance->licensors[] = new LicensorMeta($licensor->id, $licensor->name);
+                $licensorNameCanonical = JString::strToCanonical($licensor->name);
+
+                $instance->licensors[] = new MalUrl(
+                    $licensor->name,
+                    Constants::BASE_URL . "/anime/producer/{$licensor->id}/{$licensorNameCanonical}"
+                );
             }
         }
 

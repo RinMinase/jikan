@@ -47,6 +47,13 @@ class PersonSearchParser
      */
     public function getResults(): array
     {
+        // if the query is empty, MAL returns a ranking of "Most Favorited" people
+        // since that's not the scope of this method, we return empty results
+        // most favorited people are returned via the `TopPeople` API method
+        if ($this->crawler->filterXPath('//*[@id="content"]/table[@class="people-favorites-ranking-table"]')->count()) {
+            return [];
+        }
+
         $data = $this->crawler
             ->filterXPath('//div[@id="content"]/table/tr[1]')
             ->nextAll()
@@ -65,7 +72,7 @@ class PersonSearchParser
                     }
                 );
         }
-            
+
         return $data;
     }
 

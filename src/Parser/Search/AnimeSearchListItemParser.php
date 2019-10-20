@@ -4,7 +4,6 @@ namespace Jikan\Parser\Search;
 
 use Jikan\Helper\JString;
 use Jikan\Helper\Parser;
-use Jikan\Model\Common\MalUrl;
 use Jikan\Model\Search\AnimeSearchListItem;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -113,6 +112,66 @@ class AnimeSearchListItemParser
     }
 
     /**
+     * @return int
+     * @throws \InvalidArgumentException
+     */
+    public function getMembers(): int
+    {
+        return (int)str_replace(
+            ',',
+            '',
+            $this->crawler->filterXPath('//td[8]')->text()
+        );
+    }
+
+    /**
+     * @return string|null
+     * @throws \InvalidArgumentException
+     */
+    public function getRated(): ?string
+    {
+        $rated = JString::cleanse($this->crawler->filterXPath('//td[9]')->text());
+
+        if ($rated === '-') {
+            return null;
+        }
+
+        return $rated;
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function isAiring(): bool
+    {
+        // an entry with one episode can't be airing
+        // its either finished airing or hasn't aired yet
+        if (1 === $this->getEpisodes()) {
+            return false;
+        }
+        // Start not yet known
+        if (null === $this->getStartDate()) {
+            return false;
+        }
+        // Airing no end date
+        if (null === $this->getEndDate()) {
+            return true;
+        }
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        // Not yet started
+        if ($this->getStartDate() > $now) {
+            return false;
+        }
+        // Already ended
+        if ($this->getEndDate() < $now) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return \DateTimeImmutable|null
      * @throws \InvalidArgumentException
      */
@@ -170,33 +229,5 @@ class AnimeSearchListItemParser
         }
 
         return $date;
-    }
-
-    /**
-     * @return int
-     * @throws \InvalidArgumentException
-     */
-    public function getMembers(): int
-    {
-        return (int)str_replace(
-            ',',
-            '',
-            $this->crawler->filterXPath('//td[8]')->text()
-        );
-    }
-
-    /**
-     * @return string|null
-     * @throws \InvalidArgumentException
-     */
-    public function getRated(): ?string
-    {
-        $rated = JString::cleanse($this->crawler->filterXPath('//td[9]')->text());
-
-        if ($rated === '-') {
-            return null;
-        }
-
-        return $rated;
     }
 }

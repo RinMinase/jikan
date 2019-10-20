@@ -1,5 +1,34 @@
 ## Changelog
 
+### 2.8.0 - Apr 30, 19
+- **[User List : Anime|Manga]**
+    - Throw `BadResponseException` instead of `ParserException` when the request fails [#217](/../../issues/217)
+    - Add list filtering & sorting [jikan-rest#49](https://github.com/jikan-me/jikan-rest/issues/49)
+    - Replace `StudioMeta`, `LicensorMeta` & `MagazineMeta` with `MalUrl` intead
+        - This will further provide properties like `type`, `url`
+- **[Search : Anime|Manga]**
+    - Add result ordering & sorting [jikan-rest#48](https://github.com/jikan-me/jikan-rest/issues/48)
+    
+### 2.7.0 - Apr 14, 19
+- **[Anime|Manga]** 
+    - `EpisodeListItem` `aired` property to return `DateTimeImmutable` instead of `DateRange`
+    - [Bug Fix] Stats Score refactoring; returns `AnimeStatsScore`/`MangaStatsScore` object instead of array now - [#216](/../../issues/216)
+    - Fix `AnimeListItem`/`MangaListItem` parsing date formats incorrectly
+- **[Helper]** fix `parseDateMDY` returning incorrect date
+- **[Jikan.php]**
+    - fix `PersonSearch`incorrect Request class hinting
+    - add `UserMangaList`
+- **[MalClient.php]**
+    - `getAnimeEpisodes` with no episodes return empty episodes array now instead of BadResponseException (404)
+    - `getPersonSearch` with no results returns empty array now instead of BadResponseException (404)
+    - `getCharacterSearch` with no results returns empty array now instead of BadResponseException (404)
+    - `getCharacter` returns BadResponseException (404) now if invalid ID is provided
+    - Fix guzzle dep injection being overriden in some cases
+- **[User]**
+    - Fix `UserProfileParser`'s `getUsername()` returning the URL instead of the username
+- Added default values to some models
+- Other minor code and bug fixes
+
 ### 2.6.1 stable - Dec 17, 18
 - **[Club]** Optimize User list schema
 

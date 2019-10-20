@@ -3,8 +3,10 @@
 namespace Jikan\Model\User;
 
 use Jikan\Helper\Constants;
+use Jikan\Helper\JString;
 use Jikan\Helper\Parser;
 use Jikan\Model\Common\MagazineMeta;
+use Jikan\Model\Common\MalUrl;
 
 /**
  * Class MangaListItem
@@ -129,11 +131,8 @@ class MangaListItem
     private $magazines = [];
 
     /**
-     * @param \stdClass $parser
-     *
-     * @return AnimeListItem
-     * @throws \Exception
-     * @throws \InvalidArgumentException
+     * @param \stdClass $item
+     * @return MangaListItem
      */
     public static function factory(\stdClass $item): self
     {
@@ -153,18 +152,23 @@ class MangaListItem
         $instance->totalVolumes = $item->manga_num_volumes;
         $instance->publishingStatus = $item->manga_publishing_status;
         $instance->type = $item->manga_media_type_string;
-        $instance->startDate = Parser::parseDateDMY($item->manga_start_date_string);
-        $instance->endDate = Parser::parseDateDMY($item->manga_end_date_string);
-        $instance->readStartDate = Parser::parseDateDMY($item->start_date_string);
-        $instance->readEndDate = Parser::parseDateDMY($item->finish_date_string);
+        $instance->startDate = Parser::parseDateMDY($item->manga_start_date_string);
+        $instance->endDate = Parser::parseDateMDY($item->manga_end_date_string);
+        $instance->readStartDate = Parser::parseDateMDY($item->start_date_string);
+        $instance->readEndDate = Parser::parseDateMDY($item->finish_date_string);
         $instance->days = $item->days_string;
         $instance->retail= empty($item->retail_string) ? null : $item->retail_string;
         $instance->priority = $item->priority_string;
         $instance->addedToList = $item->is_added_to_list;
 
-        if (!is_null($item->manga_magazines)) {
+        if ($item->manga_magazines !== null) {
             foreach ($item->manga_magazines as $magazine) {
-                $instance->magazines[] = new MagazineMeta($magazine->id, $magazine->name);
+                $magazineNameCanonical = JString::strToCanonical($magazine->name);
+
+                $instance->magazines[] = new MalUrl(
+                    $magazine->name,
+                    Constants::BASE_URL . "/manga/magazine/{$magazine->id}/{$magazineNameCanonical}"
+                );
             }
         }
 

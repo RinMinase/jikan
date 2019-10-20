@@ -2,6 +2,7 @@
 
 namespace Jikan\Request\Search;
 
+use Jikan\Exception\BadResponseException;
 use Jikan\Request\RequestInterface;
 
 /**
@@ -43,7 +44,13 @@ class PersonSearchRequest implements RequestInterface
         $this->query = $query;
         $this->page = $page;
 
-        $this->query = $this->query ?? "";
+        $this->query = $this->query ?? '';
+
+        $querySize = strlen($this->query);
+
+        if ($querySize > 0 & $querySize < 3) {
+            throw new BadResponseException('Search queries requires at least 3 characters');
+        }
     }
 
     /**
@@ -76,7 +83,7 @@ class PersonSearchRequest implements RequestInterface
     public function setQuery(?string $query = null): self
     {
         $this->query = $query;
-        $this->query = $this->query ?? "";
+        $this->query = $this->query ?? '';
 
         return $this;
     }

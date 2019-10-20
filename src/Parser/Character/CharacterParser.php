@@ -20,9 +20,9 @@ class CharacterParser implements ParserInterface
      */
     private $crawler;
 
+
     /**
-     * AnimeParser constructor.
-     *
+     * CharacterParser constructor.
      * @param Crawler $crawler
      */
     public function __construct(Crawler $crawler)
